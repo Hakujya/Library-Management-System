@@ -33,29 +33,31 @@ A full-stack **Library Management System** built as an academic college project 
 ## 🚀 How to Run
 
 ### Prerequisites
-- Java 21+
-- Maven (or use the included `mvnw` wrapper)
+- Git
+- Java 21 or newer
 
 ### Steps
 
+Clone the repository and enter its folder:
+
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/kaizen-lms.git
-cd kaizen-lms
-
-# 2. Configure the database (copy example config)
-cp application.properties.example src/main/resources/application.properties
-# Edit application.properties with your DB credentials
-
-# 3. Run the application
-./mvnw spring-boot:run        # Mac/Linux
-mvnw.cmd spring-boot:run      # Windows
+git clone https://github.com/Hakujya/Library-Management-System.git
+cd Library-Management-System
 ```
 
-4. Open your browser at → **http://localhost:8080**
+Run the application using the included Maven wrapper:
 
-The sign-in page is visual only. Enter any username and password to continue to the dashboard.
-5. The `/login` page is visual only. Enter any username and password to continue to the dashboard; library pages are also accessible without signing in.
+```powershell
+# Windows
+.\mvnw.cmd spring-boot:run
+```
+
+```bash
+# macOS/Linux
+./mvnw spring-boot:run
+```
+
+No separate database setup is needed for the default development configuration; it uses an in-memory H2 database. Once the app has started, open **http://localhost:8080** in your browser. The sign-in page is visual only: enter any username and password to continue. Data may reset when the application stops.
 
 ---
 
