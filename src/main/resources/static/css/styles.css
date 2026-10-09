@@ -1,20 +1,20 @@
 :root {
-    --primary-blue: #1d4ed8;
-    --primary-blue-hover: #1e40af;
-    --primary-light: #eff6ff;
-    --sidebar-bg: #0f172a;
-    --sidebar-hover: #1e293b;
-    --sidebar-text: #94a3b8;
+    --primary-blue: #3b82f6;
+    --primary-blue-hover: #2563eb;
+    --primary-light: #1e3a5f;
+    --sidebar-bg: #0d0d0d;
+    --sidebar-hover: #1a1a2e;
+    --sidebar-text: #8892a4;
     --sidebar-text-active: #ffffff;
-    --body-bg: #f8fafc;
-    --card-bg: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --accent-indigo: #4f46e5;
-    --success-emerald: #10b981;
-    --warning-amber: #f59e0b;
-    --danger-rose: #ef4444;
+    --body-bg: #0f1117;
+    --card-bg: #1a1d27;
+    --text-primary: #e2e8f0;
+    --text-secondary: #8892a4;
+    --border-color: #2a2d3e;
+    --accent-indigo: #818cf8;
+    --success-emerald: #34d399;
+    --warning-amber: #fbbf24;
+    --danger-rose: #f87171;
 }
 
 body {
@@ -32,6 +32,7 @@ body {
     min-height: 100vh;
     transition: all 0.3s ease;
     z-index: 1000;
+    border-right: 1px solid var(--border-color);
 }
 
 #sidebar .brand {
@@ -40,7 +41,7 @@ body {
     font-weight: 700;
     color: #ffffff;
     letter-spacing: -0.025em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 #sidebar .nav-link {
@@ -63,9 +64,9 @@ body {
 
 #sidebar .nav-link.active {
     color: #ffffff;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
 }
 
 #sidebar .nav-heading {
@@ -73,16 +74,16 @@ body {
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.05em;
-    color: #64748b;
+    color: #4b5563;
     padding: 1.25rem 1.25rem 0.5rem 1.25rem;
 }
 
 /* Top Navbar */
 .top-navbar {
-    background-color: #ffffff;
+    background-color: #13151f;
     border-bottom: 1px solid var(--border-color);
     padding: 0.85rem 1.75rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Main Content Area */
@@ -104,8 +105,15 @@ body {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 0.75rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
+    color: var(--text-primary);
+}
+
+.card-header, .card-body, .card-footer {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
 }
 
 .card-stat {
@@ -117,7 +125,7 @@ body {
 
 .card-stat:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.5);
 }
 
 .stat-icon {
@@ -133,11 +141,12 @@ body {
 /* Data Tables */
 .table-custom {
     margin-bottom: 0;
+    color: var(--text-primary);
 }
 
 .table-custom th {
-    background-color: #f8fafc;
-    color: #475569;
+    background-color: #13151f;
+    color: #8892a4;
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -150,37 +159,48 @@ body {
     padding: 1rem 1rem;
     vertical-align: middle;
     font-size: 0.925rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
 .table-hover tbody tr:hover td {
-    background-color: #f8fafc;
+    background-color: #1e2130;
+}
+
+/* Override Bootstrap table defaults for dark mode */
+.table {
+    --bs-table-bg: var(--card-bg);
+    --bs-table-striped-bg: #1e2130;
+    --bs-table-hover-bg: #1e2130;
+    --bs-table-border-color: var(--border-color);
+    --bs-table-color: var(--text-primary);
+    color: var(--text-primary);
 }
 
 /* Badges */
 .badge-soft-primary {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
 }
 
 .badge-soft-success {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: rgba(52, 211, 153, 0.15);
+    color: #6ee7b7;
 }
 
 .badge-soft-warning {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: rgba(251, 191, 36, 0.15);
+    color: #fcd34d;
 }
 
 .badge-soft-danger {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: rgba(248, 113, 113, 0.15);
+    color: #fca5a5;
 }
 
 .badge-soft-secondary {
-    background-color: #e2e8f0;
-    color: #334155;
+    background-color: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
 }
 
 /* Buttons */
@@ -188,6 +208,7 @@ body {
     background-color: var(--primary-blue);
     border-color: var(--primary-blue);
     font-weight: 500;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
@@ -196,27 +217,83 @@ body {
 }
 
 .btn-soft {
-    background-color: #f1f5f9;
-    color: #334155;
+    background-color: #1e2130;
+    color: #cbd5e1;
     border: 1px solid var(--border-color);
 }
 
 .btn-soft:hover {
-    background-color: #e2e8f0;
-    color: #0f172a;
+    background-color: #252839;
+    color: #e2e8f0;
+}
+
+.btn-outline-primary {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #1e2130;
+    color: var(--text-primary);
 }
 
 /* Form Controls */
 .form-control, .form-select {
+    background-color: #13151f;
     border-color: var(--border-color);
     border-radius: 0.5rem;
     padding: 0.625rem 0.875rem;
     font-size: 0.925rem;
+    color: var(--text-primary);
+}
+
+.form-control::placeholder {
+    color: #4b5563;
+}
+
+.form-select option {
+    background-color: #13151f;
+    color: var(--text-primary);
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: #13151f;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    color: var(--text-primary);
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: #1e2130;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* Modals */
+.modal-content {
+    background-color: #1a1d27;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    background-color: #13151f !important;
+    border-top: 1px solid var(--border-color);
 }
 
 /* Empty State */
@@ -227,17 +304,31 @@ body {
 
 .empty-state-icon {
     font-size: 3.5rem;
-    color: #cbd5e1;
+    color: #374151;
     margin-bottom: 1rem;
+}
+
+/* Text helpers override */
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-muted {
+    color: #4b5563 !important;
 }
 
 /* Footer */
 footer {
     padding: 1.25rem 2rem;
-    background-color: #ffffff;
+    background-color: #0d0d0d;
     border-top: 1px solid var(--border-color);
     font-size: 0.85rem;
     color: var(--text-secondary);
+}
+
+/* Alert overrides */
+.alert {
+    border: 1px solid var(--border-color);
 }
 
 @media (max-width: 991.98px) {
@@ -253,3 +344,195 @@ footer {
     }
 }
 
+/* ============================================================
+   DARK MODE BOOTSTRAP OVERRIDES
+   Covers all hardcoded light classes used in templates
+   ============================================================ */
+
+/* text-dark → make it light on dark bg */
+.text-dark {
+    color: var(--text-primary) !important;
+}
+
+/* text-muted → slightly dimmer but still readable */
+.text-muted {
+    color: #8892a4 !important;
+}
+
+/* bg-white → dark card bg */
+.bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* bg-light → slightly lighter than card bg */
+.bg-light {
+    background-color: #1e2130 !important;
+    color: var(--text-primary) !important;
+}
+
+/* text-slate-900 (custom Tailwind class used in dashboard h2) */
+.text-slate-900 {
+    color: var(--text-primary) !important;
+}
+
+/* h2/h3/h4/h5/h6 and headings default color */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-primary);
+}
+
+/* Links in tables/cards that use text-dark */
+a.text-dark {
+    color: var(--text-primary) !important;
+}
+a.text-dark:hover {
+    color: #ffffff !important;
+}
+
+/* Nav tabs dark theme */
+.nav-tabs {
+    border-bottom-color: var(--border-color);
+}
+.nav-tabs .nav-link {
+    color: var(--text-secondary);
+    border-color: transparent;
+    background-color: transparent;
+}
+.nav-tabs .nav-link:hover {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    background-color: #1e2130;
+}
+.nav-tabs .nav-link.active {
+    background-color: var(--card-bg);
+    border-color: var(--border-color) var(--border-color) var(--card-bg);
+    color: var(--text-primary);
+}
+
+/* nav-link text-dark override (loans tabs) */
+.nav-tabs .nav-link.text-dark {
+    color: var(--text-secondary) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+}
+.breadcrumb-item a {
+    color: var(--primary-blue);
+}
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-secondary);
+}
+
+/* Progress bars container */
+.progress {
+    background-color: #1e2130;
+    border-radius: 999px;
+}
+
+/* code elements */
+code {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #93c5fd;
+    padding: 0.15em 0.4em;
+    border-radius: 0.3rem;
+    font-size: 0.9em;
+}
+
+/* badge bg-light (membership number chips, completed loan badges) */
+.badge.bg-light {
+    background-color: #1e2130 !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Small muted text in badges */
+.badge.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* btn-secondary */
+.btn-secondary {
+    background-color: #1e2130;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+.btn-secondary:hover {
+    background-color: #252839;
+    border-color: #3a3f5c;
+    color: #ffffff;
+}
+
+/* card-header bg-white (used directly in templates) */
+.card-header.bg-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+/* modal-footer bg-light */
+.modal-footer.bg-light {
+    background-color: #13151f !important;
+}
+
+/* input-group-text bg-white */
+.input-group-text.bg-white {
+    background-color: #13151f !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* form-text text-muted */
+.form-text.text-muted {
+    color: #8892a4 !important;
+}
+
+/* border-top inside forms */
+.border-top {
+    border-top-color: var(--border-color) !important;
+}
+
+/* Alerts dark mode feel */
+.alert-success {
+    background-color: rgba(52, 211, 153, 0.1);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: #6ee7b7;
+}
+.alert-danger {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.3);
+    color: #fca5a5;
+}
+.alert-info {
+    background-color: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: #7dd3fc;
+}
+.alert-warning {
+    background-color: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fcd34d;
+}
+
+/* btn-close override so it's visible */
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+/* but not inside coloured headers that already use btn-close-white */
+.btn-close-white {
+    filter: none;
+}
+
+/* Small chips / inline badges */
+small.badge {
+    font-size: 0.7rem;
+}
+
+/* Span text-warning-emphasis (dashboard "currently borrowed") */
+.text-warning-emphasis {
+    color: #fbbf24 !important;
+}
