@@ -11,6 +11,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Login preview password visibility toggle
+    const passwordToggle = document.querySelector('[data-password-toggle]');
+    if (passwordToggle) {
+        const passwordInput = document.getElementById(passwordToggle.getAttribute('aria-controls'));
+        if (passwordInput) {
+            passwordToggle.addEventListener('click', function () {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                passwordToggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                passwordToggle.innerHTML = isPassword
+                    ? '<i class="bi bi-eye-slash"></i>'
+                    : '<i class="bi bi-eye"></i>';
+            });
+        }
+    }
+
     // Auto-dismiss alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert-dismissible');
     alerts.forEach(function (alert) {
@@ -63,4 +79,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-

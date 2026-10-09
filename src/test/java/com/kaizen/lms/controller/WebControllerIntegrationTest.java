@@ -11,6 +11,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -31,14 +32,45 @@ class WebControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("Show the sign-in page first at the application root")
+    void testApplicationRootRedirectsToLogin() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    @DisplayName("Accept any entered username and password")
+    void testLoginAcceptsAnyCredentials() throws Exception {
+        mockMvc.perform(post("/login")
+                        .param("username", "any-user")
+                        .param("password", "any-password"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+    }
+
+    @Test
     @DisplayName("Verify Dashboard renders correctly with statistics")
     void testDashboardPage() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard"))
                 .andExpect(model().attributeExists("stats"))
                 .andExpect(content().string(containsString("Library Overview")))
-                .andExpect(content().string(containsString("Total Titles")));
+                .andExpect(content().string(containsString("Total Titles")))
+                .andExpect(content().string(containsString("Sign in")));
+    }
+
+    @Test
+    @DisplayName("Verify librarian sign-in page renders")
+    void testLoginPage() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andExpect(content().string(containsString("Welcome back")))
+                .andExpect(content().string(containsString("Enter any username and password")))
+                .andExpect(content().string(containsString("name=\"username\"")))
+                .andExpect(content().string(containsString("name=\"password\"")));
     }
 
     @Test

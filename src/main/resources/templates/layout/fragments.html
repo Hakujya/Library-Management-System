@@ -21,7 +21,7 @@
 <aside th:fragment="sidebar(activeNav)" id="sidebar" class="d-flex flex-column flex-shrink-0">
     <div class="brand d-flex align-items-center gap-2">
         <i class="bi bi-book-half text-primary fs-3"></i>
-        <div>
+        <div class="brand-label">
             <span class="d-block fw-bold fs-5">Kaizen LMS</span>
             <small class="text-secondary" style="font-size: 0.75rem;">Library System</small>
         </div>
@@ -100,6 +100,10 @@
         </div>
     </div>
     <div class="d-flex align-items-center gap-3">
+        <a th:href="@{/login}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-person-circle"></i>
+            <span>Sign in</span>
+        </a>
         <a th:href="@{/loans/issue}" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm px-3">
             <i class="bi bi-arrow-up-right-circle"></i>
             <span>Issue Book</span>
@@ -197,4 +201,3 @@
 
 </body>
 </html>
-

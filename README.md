@@ -1,4 +1,4 @@
-# 📚 Kaizen LMS — Library Management System
+na# 📚 Kaizen LMS — Library Management System
 
 A full-stack **Library Management System** built as an academic college project using **Java 21** and **Spring Boot**. Kaizen LMS allows librarians to manage books, members, and loan circulation from a clean, modern dark-themed web interface.
 
@@ -11,6 +11,7 @@ A full-stack **Library Management System** built as an academic college project 
 - 🔄 **Loan Circulation** — Issue and return books, track due dates and overdue loans
 - 📊 **Dashboard** — Real-time stats: total books, available copies, active members, overdue loans
 - 🌑 **Dark Theme UI** — Modern dark interface built with Bootstrap 5
+- 🔐 **Sign-In Page** — Opens first; any entered username and password continue to the dashboard
 - ⚠️ **Overdue Alerts** — Automatic overdue detection with visual warnings
 
 ---
@@ -52,6 +53,9 @@ mvnw.cmd spring-boot:run      # Windows
 ```
 
 4. Open your browser at → **http://localhost:8080**
+
+The sign-in page is visual only. Enter any username and password to continue to the dashboard.
+5. The `/login` page is visual only. Enter any username and password to continue to the dashboard; library pages are also accessible without signing in.
 
 ---
 
