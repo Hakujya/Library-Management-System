@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head(${member.name})}"></head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <aside th:replace="~{layout/fragments :: sidebar('members')}"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <nav th:replace="~{layout/fragments :: navbar}"></nav>
+
+        <main class="content-body">
+            <!-- Alerts -->
+            <div th:replace="~{layout/fragments :: alerts}"></div>
+
+            <!-- Page Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1 small">
+                            <li class="breadcrumb-item"><a th:href="@{/members}" class="text-decoration-none">Members</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${member.name}">Member Name</li>
+                        </ol>
+                    </nav>
+                    <div class="d-flex align-items-center gap-2">
+                        <h2 class="h3 fw-bold text-dark mb-0" th:text="${member.name}">Member Name</h2>
+                        <span class="badge" th:classappend="${member.status.badgeClass}" th:text="${member.status.displayName}">Active</span>
+                    </div>
+                    <span class="text-muted small">Card ID: <code class="text-primary fw-medium" th:text="${member.membershipNumber}">MEM-001</code></span>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:if="${member.active}"
+                       th:href="@{/loans/issue(memberId=${member.id})}"
+                       class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
+                        <i class="bi bi-box-arrow-up-right"></i> Issue Book
+                    </a>
+                    <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-outline-primary d-flex align-items-center gap-1">
+                        <i class="bi bi-pencil"></i> Edit Profile
+                    </a>
+                    <button type="button" class="btn btn-outline-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal"
+                            th:data-action="@{/members/{id}/delete(id=${member.id})}"
+                            th:data-name="${member.name}">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Member Details Card -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <h5 class="card-title fs-6 fw-bold mb-0 text-dark">
+                                <i class="bi bi-person-badge me-1 text-primary"></i> Membership Profile
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-sm-6 col-md-3">
+                                    <small class="text-muted d-block">Email Address</small>
+                                    <span class="fw-semibold text-dark" th:text="${member.email}">email@domain.com</span>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <small class="text-muted d-block">Phone Number</small>
+                                    <span class="fw-semibold text-dark" th:text="${member.phone}">123456789</span>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <small class="text-muted d-block">Member Since</small>
+                                    <span class="fw-semibold text-dark" th:text="${#temporals.format(member.registrationDate, 'dd MMMM yyyy')}">01 Jan 2026</span>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <small class="text-muted d-block">Account Status</small>
+                                    <span class="badge" th:classappend="${member.status.badgeClass}" th:text="${member.status.displayName}">Active</span>
+                                </div>
+                                <div class="col-12 mt-2 pt-2 border-top" th:if="${member.notes != null and !member.notes.isEmpty()}">
+                                    <small class="text-muted d-block mb-1">Administrative Notes</small>
+                                    <p class="text-secondary mb-0" th:text="${member.notes}">Notes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Borrowing History -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fs-6 fw-bold mb-0 text-dark">
+                        <i class="bi bi-clock-history me-1 text-primary"></i> Borrowing History for this Member
+                    </h5>
+                    <span class="small text-muted" th:text="${#lists.size(loans)} + ' total loans on record'">0 loans</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle mb-0" th:if="${loans != null and not #lists.isEmpty(loans)}">
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Category</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="loan : ${loans}">
+                                <td>
+                                    <a th:href="@{/books/{id}(id=${loan.book.id})}" class="fw-bold text-dark text-decoration-none d-block" th:text="${loan.book.title}">Book Title</a>
+                                    <small class="text-muted" th:text="${loan.book.author}">Author</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-soft-secondary" th:text="${loan.book.category.displayName}">Category</span>
+                                </td>
+                                <td class="text-secondary small" th:text="${loan.issueDate}">2026-10-01</td>
+                                <td>
+                                    <span class="small" th:classappend="${loan.overdue and !loan.returned} ? 'text-danger fw-bold' : 'text-secondary'" th:text="${loan.dueDate}">2026-10-15</span>
+                                    <span th:if="${loan.overdue and !loan.returned}" class="badge bg-danger ms-1" style="font-size: 0.65rem;">OVERDUE</span>
+                                </td>
+                                <td class="text-secondary small" th:text="${loan.returnDate != null ? loan.returnDate : '-'}">-</td>
+                                <td>
+                                    <span th:if="${loan.status.name() == 'ISSUED'}" class="badge badge-soft-primary px-2 py-1">Issued</span>
+                                    <span th:if="${loan.status.name() == 'RETURNED'}" class="badge badge-soft-success px-2 py-1">Returned</span>
+                                    <span th:if="${loan.status.name() == 'OVERDUE'}" class="badge badge-soft-danger px-2 py-1">Overdue</span>
+                                </td>
+                                <td class="text-end">
+                                    <button th:if="${!loan.returned}"
+                                            type="button"
+                                            class="btn btn-outline-success btn-sm py-1 px-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#returnBookModal"
+                                            th:data-action="@{/loans/{id}/return(id=${loan.id})}"
+                                            th:data-title="${loan.book.title}"
+                                            th:data-member="${member.name}">
+                                        <i class="bi bi-arrow-return-left"></i> Return Book
+                                    </button>
+                                    <span th:if="${loan.returned}" class="text-muted small">
+                                        <i class="bi bi-check2 text-success"></i> Returned
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Empty state -->
+                    <div class="empty-state" th:if="${loans == null or #lists.isEmpty(loans)}">
+                        <div class="empty-state-icon">
+                            <i class="bi bi-journal-check"></i>
+                        </div>
+                        <h6 class="fw-semibold text-secondary">No Borrowing History</h6>
+                        <p class="text-muted small mb-3">This member currently has no active or past book loans.</p>
+                        <a th:if="${member.active}" th:href="@{/loans/issue(memberId=${member.id})}" class="btn btn-primary btn-sm">Issue Book to Member</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{layout/fragments :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Modals -->
+<div th:replace="~{layout/fragments :: modals}"></div>
+
+</body>
+</html>
+

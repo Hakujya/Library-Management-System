@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Book Catalog')}"></head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <aside th:replace="~{layout/fragments :: sidebar('books')}"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <nav th:replace="~{layout/fragments :: navbar}"></nav>
+
+        <main class="content-body">
+            <!-- Alerts -->
+            <div th:replace="~{layout/fragments :: alerts}"></div>
+
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <h2 class="h3 fw-bold text-dark mb-1">Book Catalog</h2>
+                    <p class="text-secondary small mb-0">Browse, search, manage, and track book inventory</p>
+                </div>
+                <div>
+                    <a th:href="@{/books/new}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Add New Book</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filter and Search Bar -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-3">
+                    <form th:action="@{/books}" method="get" class="row g-2 align-items-center">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0 text-muted">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" name="search" class="form-control border-start-0"
+                                       placeholder="Search title, author, ISBN..." th:value="${searchTerm}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="category" class="form-select">
+                                <option value="">-- All Categories --</option>
+                                <option th:each="cat : ${categories}"
+                                        th:value="${cat}"
+                                        th:text="${cat.displayName}"
+                                        th:selected="${selectedCategory == cat}">Category</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+                            <a th:href="@{/books}" class="btn btn-outline-secondary" title="Reset filter">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Books Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold text-secondary small">
+                        Showing <span class="text-dark fw-bold" th:text="${#lists.size(books)}">0</span> book titles
+                    </span>
+                    <a th:href="@{/loans/issue}" class="small text-decoration-none fw-semibold">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Issue a copy
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle mb-0" th:if="${books != null and not #lists.isEmpty(books)}">
+                        <thead>
+                            <tr>
+                                <th>Book Details</th>
+                                <th>ISBN</th>
+                                <th>Category</th>
+                                <th>Inventory Copies</th>
+                                <th>Shelf Location</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="book : ${books}">
+                                <td>
+                                    <a th:href="@{/books/{id}(id=${book.id})}" class="fw-bold text-dark text-decoration-none d-block fs-6" th:text="${book.title}">Title</a>
+                                    <small class="text-muted"><i class="bi bi-person me-1"></i><span th:text="${book.author}">Author</span></small>
+                                </td>
+                                <td>
+                                    <code class="text-primary fw-medium" th:text="${book.isbn}">ISBN-000</code>
+                                </td>
+                                <td>
+                                    <span class="badge badge-soft-secondary" th:text="${book.category.displayName}">Category</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span th:if="${book.availableCopies > 0}" class="badge badge-soft-success px-2 py-1">
+                                            <span th:text="${book.availableCopies}">0</span> / <span th:text="${book.totalCopies}">0</span> Available
+                                        </span>
+                                        <span th:if="${book.availableCopies == 0}" class="badge badge-soft-danger px-2 py-1">
+                                            Out of Stock (0/<span th:text="${book.totalCopies}">0</span>)
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="small text-secondary" th:text="${book.locationShelf != null and !book.locationShelf.isEmpty() ? book.locationShelf : 'Unassigned'}">Shelf A1</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/books/{id}(id=${book.id})}" class="btn btn-outline-secondary" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/books/{id}/edit(id=${book.id})}" class="btn btn-outline-primary" title="Edit Book">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmDeleteModal"
+                                                th:data-action="@{/books/{id}/delete(id=${book.id})}"
+                                                th:data-name="${book.title}"
+                                                title="Delete Book">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" th:if="${books == null or #lists.isEmpty(books)}">
+                        <div class="empty-state-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h6 class="fw-semibold text-secondary">No Books Found</h6>
+                        <p class="text-muted small mb-3">Try clearing search filters or add a new book to your library catalog.</p>
+                        <a th:href="@{/books/new}" class="btn btn-primary btn-sm">Add New Book</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{layout/fragments :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Modals -->
+<div th:replace="~{layout/fragments :: modals}"></div>
+
+</body>
+</html>
+

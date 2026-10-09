@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Member Directory')}"></head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <aside th:replace="~{layout/fragments :: sidebar('members')}"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <nav th:replace="~{layout/fragments :: navbar}"></nav>
+
+        <main class="content-body">
+            <!-- Alerts -->
+            <div th:replace="~{layout/fragments :: alerts}"></div>
+
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <h2 class="h3 fw-bold text-dark mb-1">Library Members</h2>
+                    <p class="text-secondary small mb-0">Manage registered students, faculty, and library cardholders</p>
+                </div>
+                <div>
+                    <a th:href="@{/members/new}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-person-plus-fill"></i>
+                        <span>Register Member</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-3">
+                    <form th:action="@{/members}" method="get" class="row g-2 align-items-center">
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0 text-muted">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" name="search" class="form-control border-start-0"
+                                       placeholder="Search member name, email, membership number, or phone..." th:value="${searchTerm}">
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">Search</button>
+                            <a th:href="@{/members}" class="btn btn-outline-secondary" title="Reset filter">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Members Table -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold text-secondary small">
+                        Showing <span class="text-dark fw-bold" th:text="${#lists.size(members)}">0</span> members
+                    </span>
+                    <a th:href="@{/loans/issue}" class="small text-decoration-none fw-semibold">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Issue to member
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover align-middle mb-0" th:if="${members != null and not #lists.isEmpty(members)}">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Membership ID</th>
+                                <th>Contact Information</th>
+                                <th>Status</th>
+                                <th>Registered Date</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="member : ${members}">
+                                <td>
+                                    <a th:href="@{/members/{id}(id=${member.id})}" class="fw-bold text-dark text-decoration-none d-block fs-6" th:text="${member.name}">Name</a>
+                                </td>
+                                <td>
+                                    <code class="text-primary fw-medium" th:text="${member.membershipNumber}">MEM-2026-001</code>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <i class="bi bi-envelope me-1 text-muted"></i><span class="text-secondary" th:text="${member.email}">email@domain.com</span>
+                                    </div>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-telephone me-1 text-muted"></i><span th:text="${member.phone}">123456789</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge" th:classappend="${member.status.badgeClass}" th:text="${member.status.displayName}">Active</span>
+                                </td>
+                                <td>
+                                    <span class="small text-secondary" th:text="${#temporals.format(member.registrationDate, 'dd MMM yyyy')}">01 Jan 2026</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/members/{id}(id=${member.id})}" class="btn btn-outline-secondary" title="View Member Profile">
+                                            <i class="bi bi-person-badge"></i>
+                                        </a>
+                                        <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-outline-primary" title="Edit Member">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmDeleteModal"
+                                                th:data-action="@{/members/{id}/delete(id=${member.id})}"
+                                                th:data-name="${member.name}"
+                                                title="Delete Member">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" th:if="${members == null or #lists.isEmpty(members)}">
+                        <div class="empty-state-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h6 class="fw-semibold text-secondary">No Members Found</h6>
+                        <p class="text-muted small mb-3">Try modifying your search or register a new member.</p>
+                        <a th:href="@{/members/new}" class="btn btn-primary btn-sm">Register Member</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{layout/fragments :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Modals -->
+<div th:replace="~{layout/fragments :: modals}"></div>
+
+</body>
+</html>
+

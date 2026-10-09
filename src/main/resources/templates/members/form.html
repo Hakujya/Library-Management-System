@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head(${pageTitle})}"></head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <aside th:replace="~{layout/fragments :: sidebar('members')}"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <nav th:replace="~{layout/fragments :: navbar}"></nav>
+
+        <main class="content-body">
+            <!-- Alerts -->
+            <div th:replace="~{layout/fragments :: alerts}"></div>
+
+            <!-- Page Header -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1 small">
+                            <li class="breadcrumb-item"><a th:href="@{/members}" class="text-decoration-none">Members</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${isEdit ? 'Edit Member' : 'New Member'}">New Member</li>
+                        </ol>
+                    </nav>
+                    <h2 class="h3 fw-bold text-dark mb-0" th:text="${isEdit ? 'Edit Member Profile' : 'Register New Member'}">Register Member</h2>
+                </div>
+                <a th:href="@{/members}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Members
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <h5 class="card-title fs-6 fw-bold mb-0 text-dark">
+                                <i class="bi bi-person-lines-fill me-1 text-primary"></i> Member Information
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form th:action="${isEdit} ? @{/members/{id}/edit(id=${memberId})} : @{/members}"
+                                  th:object="${member}" method="post" novalidate>
+
+                                <div class="row g-3 mb-3">
+                                    <!-- Full Name -->
+                                    <div class="col-md-12">
+                                        <label for="name" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="name" th:field="*{name}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. Alex Johnson">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
+                                        <input type="email" id="email" th:field="*{email}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. alex.johnson@university.edu">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+                                    </div>
+
+                                    <!-- Phone -->
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label fw-semibold small">Phone Number <span class="text-danger">*</span></label>
+                                        <input type="text" id="phone" th:field="*{phone}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. +1 555-0199">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</div>
+                                    </div>
+
+                                    <!-- Membership Number -->
+                                    <div class="col-md-6">
+                                        <label for="membershipNumber" class="form-label fw-semibold small">Membership Number</label>
+                                        <input type="text" id="membershipNumber" th:field="*{membershipNumber}" class="form-control font-monospace"
+                                               placeholder="Leave blank to auto-generate (MEM-2026-XXXX)">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('membershipNumber')}" th:errors="*{membershipNumber}">ID error</div>
+                                        <small class="form-text text-muted" th:if="${!isEdit}">Leave empty to auto-assign a formatted card number.</small>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-6">
+                                        <label for="status" class="form-label fw-semibold small">Membership Status <span class="text-danger">*</span></label>
+                                        <select id="status" th:field="*{status}" class="form-select"
+                                                th:classappend="${#fields.hasErrors('status')} ? 'is-invalid' : ''">
+                                            <option th:each="st : ${statuses}"
+                                                    th:value="${st}"
+                                                    th:text="${st.displayName}">Active</option>
+                                        </select>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Status error</div>
+                                    </div>
+
+                                    <!-- Registration Date -->
+                                    <div class="col-md-6">
+                                        <label for="registrationDate" class="form-label fw-semibold small">Registration Date</label>
+                                        <input type="date" id="registrationDate" th:field="*{registrationDate}" class="form-control">
+                                    </div>
+
+                                    <!-- Notes -->
+                                    <div class="col-md-12">
+                                        <label for="notes" class="form-label fw-semibold small">Administrative Notes</label>
+                                        <textarea id="notes" th:field="*{notes}" class="form-control" rows="3"
+                                                  placeholder="e.g. Computer Science Department, Undergraduate Year 2..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+                                    <a th:href="@{/members}" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="bi bi-check2-circle me-1"></i>
+                                        <span th:text="${isEdit ? 'Save Changes' : 'Register Member'}">Save</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{layout/fragments :: footer}"></footer>
+    </div>
+</div>
+
+</body>
+</html>
+

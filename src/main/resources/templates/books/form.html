@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head(${pageTitle})}"></head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <aside th:replace="~{layout/fragments :: sidebar('books')}"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <nav th:replace="~{layout/fragments :: navbar}"></nav>
+
+        <main class="content-body">
+            <!-- Alerts -->
+            <div th:replace="~{layout/fragments :: alerts}"></div>
+
+            <!-- Page Header -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1 small">
+                            <li class="breadcrumb-item"><a th:href="@{/books}" class="text-decoration-none">Books</a></li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${isEdit ? 'Edit Book' : 'New Book'}">New Book</li>
+                        </ol>
+                    </nav>
+                    <h2 class="h3 fw-bold text-dark mb-0" th:text="${isEdit ? 'Edit Book Record' : 'Add Book to Catalog'}">Add Book</h2>
+                </div>
+                <a th:href="@{/books}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Catalog
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-xl-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <h5 class="card-title fs-6 fw-bold mb-0 text-dark">
+                                <i class="bi bi-journal-text me-1 text-primary"></i> Book Metadata & Inventory
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form th:action="${isEdit} ? @{/books/{id}/edit(id=${bookId})} : @{/books}"
+                                  th:object="${book}" method="post" novalidate>
+
+                                <div class="row g-3 mb-3">
+                                    <!-- Title -->
+                                    <div class="col-md-12">
+                                        <label for="title" class="form-label fw-semibold small">Book Title <span class="text-danger">*</span></label>
+                                        <input type="text" id="title" th:field="*{title}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. Clean Architecture: A Craftsman's Guide">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
+                                    </div>
+
+                                    <!-- Author -->
+                                    <div class="col-md-6">
+                                        <label for="author" class="form-label fw-semibold small">Author(s) <span class="text-danger">*</span></label>
+                                        <input type="text" id="author" th:field="*{author}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('author')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. Robert C. Martin">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</div>
+                                    </div>
+
+                                    <!-- ISBN -->
+                                    <div class="col-md-6">
+                                        <label for="isbn" class="form-label fw-semibold small">ISBN (10 or 13 digits) <span class="text-danger">*</span></label>
+                                        <input type="text" id="isbn" th:field="*{isbn}" class="form-control font-monospace"
+                                               th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid' : ''"
+                                               placeholder="e.g. 978-0134494166">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">ISBN error</div>
+                                    </div>
+
+                                    <!-- Category -->
+                                    <div class="col-md-6">
+                                        <label for="category" class="form-label fw-semibold small">Category / Genre <span class="text-danger">*</span></label>
+                                        <select id="category" th:field="*{category}" class="form-select"
+                                                th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''">
+                                            <option value="">-- Select Category --</option>
+                                            <option th:each="cat : ${categories}"
+                                                    th:value="${cat}"
+                                                    th:text="${cat.displayName}">Category</option>
+                                        </select>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Category error</div>
+                                    </div>
+
+                                    <!-- Total Copies -->
+                                    <div class="col-md-6">
+                                        <label for="totalCopies" class="form-label fw-semibold small">Total Copies in Inventory <span class="text-danger">*</span></label>
+                                        <input type="number" id="totalCopies" th:field="*{totalCopies}" class="form-control" min="1"
+                                               th:classappend="${#fields.hasErrors('totalCopies')} ? 'is-invalid' : ''">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('totalCopies')}" th:errors="*{totalCopies}">Total copies error</div>
+                                        <small class="form-text text-muted" th:if="${isEdit}">Note: Cannot reduce below number of currently borrowed copies.</small>
+                                    </div>
+
+                                    <!-- Publisher -->
+                                    <div class="col-md-4">
+                                        <label for="publisher" class="form-label fw-semibold small">Publisher</label>
+                                        <input type="text" id="publisher" th:field="*{publisher}" class="form-control"
+                                               placeholder="e.g. Prentice Hall">
+                                    </div>
+
+                                    <!-- Publication Year -->
+                                    <div class="col-md-4">
+                                        <label for="publicationYear" class="form-label fw-semibold small">Publication Year</label>
+                                        <input type="number" id="publicationYear" th:field="*{publicationYear}" class="form-control"
+                                               min="1000" max="2100" placeholder="e.g. 2017">
+                                    </div>
+
+                                    <!-- Shelf Location -->
+                                    <div class="col-md-4">
+                                        <label for="locationShelf" class="form-label fw-semibold small">Shelf Location</label>
+                                        <input type="text" id="locationShelf" th:field="*{locationShelf}" class="form-control"
+                                               placeholder="e.g. Shelf CS-204">
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="col-md-12">
+                                        <label for="description" class="form-label fw-semibold small">Synopsis / Description</label>
+                                        <textarea id="description" th:field="*{description}" class="form-control" rows="3"
+                                                  placeholder="Brief overview of the book's contents..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+                                    <a th:href="@{/books}" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary px-4">
+                                        <i class="bi bi-check2-circle me-1"></i>
+                                        <span th:text="${isEdit ? 'Save Changes' : 'Add Book'}">Save</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer th:replace="~{layout/fragments :: footer}"></footer>
+    </div>
+</div>
+
+</body>
+</html>
+

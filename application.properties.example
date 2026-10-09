@@ -1,0 +1,36 @@
+# ===================================================================
+# Library Management System - Example Configuration Template
+# ===================================================================
+# Copy this file to src/main/resources/application.properties or configure
+# environment variables as shown below.
+# DO NOT commit real database passwords to version control!
+# ===================================================================
+
+# Active Spring Profile: 'dev' for H2 in-memory, 'prod' for MySQL
+spring.profiles.active=prod
+
+# Application Name & Port
+spring.application.name=library-management-system
+server.port=8080
+
+# -------------------------------------------------------------------
+# MySQL Database Configuration
+# -------------------------------------------------------------------
+# You can set these via system environment variables:
+#   SPRING_DATASOURCE_URL
+#   SPRING_DATASOURCE_USERNAME
+#   SPRING_DATASOURCE_PASSWORD
+# -------------------------------------------------------------------
+spring.datasource.url=jdbc:mysql://localhost:3306/library_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=YOUR_MYSQL_PASSWORD_HERE
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA / Hibernate
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+
+# Seed sample books and members on startup (set to true for initial testing)
+app.seed-sample-data=true
+
