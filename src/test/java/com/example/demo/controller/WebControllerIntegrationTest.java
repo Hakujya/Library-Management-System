@@ -127,4 +127,14 @@ class WebControllerIntegrationTest {
                 .andExpect(model().attributeExists("activeMembers"))
                 .andExpect(content().string(containsString("Issue Book to Member")));
     }
+
+    @Test
+    @DisplayName("Verify friendly error page renders when book is not found")
+    void testResourceNotFoundRendersErrorPage() throws Exception {
+        mockMvc.perform(get("/books/999999"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error/error"))
+                .andExpect(model().attribute("errorCode", 404))
+                .andExpect(content().string(containsString("Record Not Found")));
+    }
 }

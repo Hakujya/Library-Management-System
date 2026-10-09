@@ -337,3 +337,4 @@ To publish this project to your GitHub account:
 
 ---
 **Academic Project** &bull; Department of Computer Science & Engineering &bull; 2026
+
